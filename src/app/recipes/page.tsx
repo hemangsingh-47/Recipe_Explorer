@@ -8,7 +8,19 @@ export const metadata: Metadata = {
   description: "Browse everyday dishes by cuisine, ingredients, and prep time."
 };
 
-export default function RecipesPage() {
+type Search = { q?: string };
+
+export default async function RecipesPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const { q = "" } = await searchParams;
+  const needle = q.trim().toLowerCase();
+
+  let list = recipes.filter(
+    (r) =>
+      !needle ||
+      r.title.toLowerCase().includes(needle) ||
+      r.ingredients.some((i) => i.toLowerCase().includes(needle))
+  );
+
   return (
     <>
       <Crumbs items={[["Home", "/"], ["Recipes"]]} />
@@ -16,8 +28,28 @@ export default function RecipesPage() {
       <p className="lede">
         Browse everyday home-cooked dishes by regional cuisine, ingredient, and preparation time.
       </p>
+
+      <form className="filters" action="/recipes">
+        <div className="input-wrap">
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Search recipes, ingredients, or spicesâ€¦"
+            aria-label="Search recipes"
+          />
+        </div>
+        <button className="btn" type="submit">
+          Search
+        </button>
+        {q && (
+          <Link href="/recipes" className="btn ghost">
+            Reset
+          </Link>
+        )}
+      </form>
+
       <div className="grid four">
-        {recipes.map((r) => (
+        {list.map((r) => (
           <RecipeCard key={r.id} r={r} />
         ))}
       </div>
