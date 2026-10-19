@@ -51,4 +51,47 @@ export function Footer() {
   );
 }
 
+export function Crumbs({ items }: { items: [string, string?][] }) {
+  return (
+    <nav className="crumbs" aria-label="Breadcrumb">
+      {items.map(([label, href], i) => (
+        <span key={label} className="crumb-item">
+          {i > 0 && <span className="sep">â€º</span>}
+          {href ? <Link href={href}>{label}</Link> : <span className="active">{label}</span>}
+        </span>
+      ))}
+    </nav>
+  );
+}
+
+export function RecipeCard({ r }: { r: Recipe }) {
+  const diffClass = r.difficulty.toLowerCase();
+  return (
+    <Link href={`/recipes/${r.id}`} className="card">
+      <div
+        className="thumb"
+        style={{
+          background: `linear-gradient(135deg, ${r.tone}, ${r.tone}cc)`
+        }}
+      >
+        <span className="thumb-initial">{r.title[0]}</span>
+        <span className="thumb-emoji">{r.emoji}</span>
+        <span className="pill time-pill">â±ï¸ {r.minutes}m</span>
+      </div>
+      <div className="card-body">
+        <div className="tags">
+          <span className="tag-badge">{r.cuisine}</span>
+          <span className={`tag-difficulty ${diffClass}`}>{r.difficulty}</span>
+          <span className="servings-tag">ðŸ‘¥ {r.servings} serv</span>
+        </div>
+        <h3>{r.title}</h3>
+        <p>{r.summary}</p>
+        <div className="card-footer">
+          <span className="view-link">View recipe â†’</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export const cuisineHref = (c: string) => `/cuisines/${slugify(c)}`;
