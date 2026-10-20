@@ -6,7 +6,7 @@ export function Header() {
     <header className="bar">
       <div className="wrap row">
         <Link href="/recipes" className="brand">
-          <span className="brand-badge">ðŸ³</span>
+          <span className="brand-badge">🍳</span>
           <span className="brand-title">
             Savoria<span className="brand-dot">.</span>
           </span>
@@ -29,7 +29,7 @@ export function Footer() {
     <footer className="wrap foot">
       <div className="foot-left">
         <div className="foot-brand">
-          <span className="brand-badge mini">ðŸ³</span> Savoria
+          <span className="brand-badge mini">🍳</span> Savoria
         </div>
         <p className="foot-desc">
           Handcrafted culinary notebook celebrating diverse global flavors, home kitchen cooking, and mindful meals.
@@ -44,7 +44,7 @@ export function Footer() {
           </a>
         </div>
         <div className="foot-copy">
-          Â© 2026 Hemang Singh Â· All culinary rights reserved.
+          © {new Date().getFullYear()} Hemang Singh · All culinary rights reserved.
         </div>
       </div>
     </footer>
@@ -56,7 +56,7 @@ export function Crumbs({ items }: { items: [string, string?][] }) {
     <nav className="crumbs" aria-label="Breadcrumb">
       {items.map(([label, href], i) => (
         <span key={label} className="crumb-item">
-          {i > 0 && <span className="sep">â€º</span>}
+          {i > 0 && <span className="sep">›</span>}
           {href ? <Link href={href}>{label}</Link> : <span className="active">{label}</span>}
         </span>
       ))}
@@ -68,26 +68,42 @@ export function RecipeCard({ r }: { r: Recipe }) {
   const diffClass = r.difficulty.toLowerCase();
   return (
     <Link href={`/recipes/${r.id}`} className="card">
-      <div
-        className="thumb"
-        style={{
-          background: `linear-gradient(135deg, ${r.tone}, ${r.tone}cc)`
-        }}
-      >
-        <span className="thumb-initial">{r.title[0]}</span>
-        <span className="thumb-emoji">{r.emoji}</span>
-        <span className="pill time-pill">â±ï¸ {r.minutes}m</span>
+      <div className="thumb">
+        {r.image ? (
+          <img
+            src={r.image}
+            alt={r.title}
+            className="thumb-img"
+            loading="lazy"
+          />
+        ) : (
+          <div
+            className="thumb-fallback"
+            style={{
+              background: `linear-gradient(135deg, ${r.tone}, ${r.tone}cc)`
+            }}
+          >
+            <span className="thumb-initial">{r.title[0]}</span>
+            <span className="thumb-emoji">{r.emoji}</span>
+          </div>
+        )}
+        <div className="thumb-overlay"></div>
+        <span className="pill time-pill">⏱️ {r.minutes}m</span>
+        {r.rating && <span className="pill rating-pill">★ {r.rating}</span>}
       </div>
+
       <div className="card-body">
         <div className="tags">
           <span className="tag-badge">{r.cuisine}</span>
           <span className={`tag-difficulty ${diffClass}`}>{r.difficulty}</span>
-          <span className="servings-tag">ðŸ‘¥ {r.servings} serv</span>
+          <span className="servings-tag">👥 {r.servings} serv</span>
         </div>
+
         <h3>{r.title}</h3>
         <p>{r.summary}</p>
+
         <div className="card-footer">
-          <span className="view-link">View recipe â†’</span>
+          <span className="view-link">View Recipe →</span>
         </div>
       </div>
     </Link>
@@ -95,3 +111,4 @@ export function RecipeCard({ r }: { r: Recipe }) {
 }
 
 export const cuisineHref = (c: string) => `/cuisines/${slugify(c)}`;
+
